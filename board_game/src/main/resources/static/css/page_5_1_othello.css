@@ -1,0 +1,41 @@
+@CHARSET "UTF-8";
+body{
+		background: #CCFF33;
+	font-size:18px;
+	overflow-x : hidden ;
+}
+
+.chat_img{
+	max-width:30px;
+	max-height:30px;
+	width:auto;
+	height:auto;
+	vartical-align:middle;
+}
+
+.chat_img_frame{
+	width:30px;
+	height:30px;
+	text-align:center;
+	vartical-align:middle;
+	float:left;
+}
+.chat_nickname{
+
+}
+.chat_text{
+	clear:both;
+}
+.system_message{
+	font-weight:bold;
+	color:#ff0000;
+}
+
+.myself{
+	font-weight:bold;
+	color:#FFAAFF;
+}
+.enemy{
+	font-weight:bold;
+	color:#00AABB;
+}
