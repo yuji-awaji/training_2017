@@ -90,7 +90,7 @@ $(function imgupload(){
 		</tr>
 		<tr>
 			<td id="img_area" class="img_form">
-				<label class="img_label">プロフィール画像</label><br></br><input type="file" name="profile_img" class="file_button" accept='image/*' th:field="*{userImage}"></input><br></br>
+				<label class="img_label">プロフィール画像</label><br></br><input type="file" name="profile_img" class="file_button" accept='image/*' th:field="*{profileImage}"></input><br></br>
 				<div class="img"><img src="./img/user_default.jpg" class="img_view" /></div>
 			</td>
 			<td class="img_text">
@@ -103,15 +103,23 @@ $(function imgupload(){
 			</td>
 		</tr>
 	</table>
-	<p class="error_msg">IDは3文字以上10文字以下の半角英数字で<br></br>入力してください<br></br>or<br></br>IDは既に登録済みです<br></br>別のIDを入力してください</p>
-	<p class="error_msg">パスワードは8文字以上32文字以下の半角英数字で<br></br>入力してください</p>
-	<p class="error_msg">入力されたパスワードが一致しません</p>
-	<p class="error_msg">ニックネームは3文字以上20文字以下の半角全角文字<br></br>（スペースを除く）で入力してください</p>
-	<p class="error_msg">
+
+	<p class="error_msg" th:unless="${ErrorFlag.id}">IDは3文字以上10文字以下の半角英数字で<br></br>入力してください<br></br></p>
+	<div th:if="${ErrorFlag.id}">
+		<p class="error_msg" th:unless="${ErrorFlag.alreadyId}">IDは既に登録済みです<br></br>別のIDを入力してください</p>
+	</div>
+
+	<p class="error_msg" th:unless="${ErrorFlag.password}">パスワードは8文字以上32文字以下の半角英数字で<br></br>入力してください</p>
+	<p class="error_msg" th:unless="${ErrorFlag.rePassword}">入力されたパスワードが一致しません</p>
+	<p class="error_msg" th:unless="${ErrorFlag.nickName}">ニックネームは3文字以上20文字以下の半角全角文字<br></br>（スペースを除く）で入力してください</p>
+	<p class="error_msg" th:unless="${ErrorFlag.profileImageType}" >
 		指定されたファイルが画像ではありません<br></br>画像ファイル（bmp,jpg/jpeg,gif,png）を指定してください<br></br>
-		or<br></br>
+	</p>
+	<div th:if="${ErrorFlag.profileImageType}">
+	<p class="error_msg" th:unless="${ErrorFlag.profileImageSize}">
 		指定された画像が最低画像サイズより小さいため<br></br>登録できません<br></br>100×100ピクセルより大きい画像を指定してください
 	</p>
+</div>
 	<p class="submit"><input type="submit" value="新規登録" class="common_button"></input></p>
 </form>
 </div>
