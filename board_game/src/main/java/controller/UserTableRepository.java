@@ -1,9 +1,9 @@
 package controller;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-import controller.UserTable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserTableRepository extends JpaRepository<UserTable, Integer>
 {
-
+	public List<UserTable> findByUserIdContains(String userId);
 }

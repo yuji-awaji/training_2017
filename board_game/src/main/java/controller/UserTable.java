@@ -2,8 +2,8 @@ package controller;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -15,18 +15,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class UserTable{
-
 	@Id
 	@Column(nullable = false)
-	private String user_id;
+	private String userId;
 	@Column(nullable = false)
 	private String password;
 	@Column(nullable = false)
 	private String nickname;
+	@Lob
+    @Column(length=16777215,nullable = false )
+	private byte[]  profileImage;
 	@Column(nullable = false)
-	private String profile_image_path;
+	private String fileType;
 	@Column(nullable = false)
 	private int win;
 	@Column(nullable = false)
@@ -37,19 +38,20 @@ public class UserTable{
 	public UserTable(){
 
 	}
-	public UserTable(String user_id,String password,String nickname,
-			String profile_image_path){
-		this.user_id=user_id;
+	public UserTable(String userId,String password,String nickname,
+			byte[] profileImage,String extension){
+		this.userId=userId;
 		this.password=password;
 		this.nickname=nickname;
-		this.profile_image_path=profile_image_path;
+		this.profileImage=profileImage;
+		this. fileType=extension;
 	}
 
-	public String getUser_id() {
-		return user_id;
+	public String getuserId() {
+		return userId;
 	}
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
+	public void setuserId(String userId) {
+		this.userId = userId;
 	}
 	public String getPassword() {
 		return password;
@@ -63,11 +65,11 @@ public class UserTable{
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public String getProfile_image_path() {
-		return profile_image_path;
+	public byte[] getprofileImagePath() {
+		return profileImage;
 	}
-	public void setProfile_image_path(String profile_image_path) {
-		this.profile_image_path = profile_image_path;
+	public void setprofileImagePath(byte[] profileImagePath) {
+		this.profileImage = profileImagePath;
 	}
 	public int getWin() {
 		return win;
@@ -87,15 +89,23 @@ public class UserTable{
 	public void setDraw(int draw) {
 		this.draw = draw;
 	}
-	@Override
-    public String toString()
-    {
-        return "user_id=" + this.user_id
-                + "password=" + this.password
-                + "nickname=" + this.nickname
-        		+ "profile_image_path= " + this.profile_image_path
-        		+ "win=" + this.win
-        		+ "lose=" + this.lose
-        		+ "draw=" + this.draw;
-    }
+
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public byte[] getProfileImage() {
+		return profileImage;
+	}
+	public void setProfileImage(byte[] profileImage) {
+		this.profileImage = profileImage;
+	}
+	public String getFileType() {
+		return fileType;
+	}
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
 }
