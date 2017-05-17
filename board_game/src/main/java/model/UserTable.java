@@ -3,7 +3,6 @@ package controller;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserTable{
 	@Id
 	@Column(nullable = false)
@@ -23,11 +23,8 @@ public class UserTable{
 	private String password;
 	@Column(nullable = false)
 	private String nickname;
-	@Lob
-    @Column(length=16777215,nullable = false )
-	private byte[]  profileImage;
 	@Column(nullable = false)
-	private String fileType;
+	private String profileImagePath;
 	@Column(nullable = false)
 	private int win;
 	@Column(nullable = false)
@@ -39,12 +36,11 @@ public class UserTable{
 
 	}
 	public UserTable(String userId,String password,String nickname,
-			byte[] profileImage,String extension){
+			String profileImagePath){
 		this.userId=userId;
 		this.password=password;
 		this.nickname=nickname;
-		this.profileImage=profileImage;
-		this. fileType=extension;
+		this.profileImagePath=profileImagePath;
 	}
 
 	public String getuserId() {
@@ -65,11 +61,11 @@ public class UserTable{
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	public byte[] getprofileImagePath() {
-		return profileImage;
+	public String getprofileImagePath() {
+		return profileImagePath;
 	}
-	public void setprofileImagePath(byte[] profileImagePath) {
-		this.profileImage = profileImagePath;
+	public void setprofileImagePath(String profileImagePath) {
+		this.profileImagePath = profileImagePath;
 	}
 	public int getWin() {
 		return win;
@@ -90,22 +86,10 @@ public class UserTable{
 		this.draw = draw;
 	}
 
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public byte[] getProfileImage() {
-		return profileImage;
-	}
-	public void setProfileImage(byte[] profileImage) {
-		this.profileImage = profileImage;
-	}
-	public String getFileType() {
-		return fileType;
-	}
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
-	}
+	@Override
+    public String toString()
+    {
+        return this.nickname+","+profileImagePath+","+win+","+lose+","+draw;
+
+    }
 }

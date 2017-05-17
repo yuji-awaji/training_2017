@@ -1,7 +1,7 @@
 package model;
 
 import org.springframework.web.multipart.MultipartFile;
-//ユーザー登録時のユーザー情報の一時的な格納インスタンス
+
 public class UserInfo {
 
     private String id=null;
@@ -9,6 +9,7 @@ public class UserInfo {
     private String rePassword=null;
     private String nickName=null;
     private MultipartFile profileImage=null;
+    private String imageURL=null;
 	public String getId() {
 		return id;
 	}
@@ -39,6 +40,11 @@ public class UserInfo {
 	public void setProfileImage(MultipartFile profileImage) {
 		this.profileImage = profileImage;
 	}
-
+	public String getImageURL() {
+		return imageURL;
+	}
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
+	}
 
 }
