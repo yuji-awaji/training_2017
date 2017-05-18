@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8"></meta>
+		<title>メニュー｜オセロゲーム</title>
+		<link rel="stylesheet" type="text/css" href="common/css/header.css"></link>
+		<link rel="stylesheet" type="text/css" href="css/page_4_menu.css"></link>
+		<link rel="stylesheet" href="./common/css/jquery-ui.css" type="text/css"></link>
+		<link rel="stylesheet" href="./common/css/common.css" type="text/css"></link>
+
+		<script type="text/javascript" src="./common/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="./common/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="common/js/dropdown.js"></script>
+		<script type="text/javascript" src="js/4_menu.js"></script>
+
+	</head>
+	<body class="main" background="./common/img/background.jpg">
+	<div id="border">
+	</div>
+		<div id="header">
+			<div id="logo">
+				<img src="img/logo.jpg"></img>
+			</div>
+			<div id="info">
+				<h1>メインメニュー<br></br></h1>
+				<p>―ゲーム選択―</p>
+			</div>
+			<div id="icon_area">
+				<img th:src="'data:image/'+${image_type}+';base64,'+${image}"  id="user_icon"></img>
+			</div>
+			<div id="dropdown">
+				<table id="menu_table">
+					<tr>
+						<td id="name" th:text="${nickname}"></td>
+				    </tr>
+	    			<tr class="drop_top">
+						<td id="drop_top">▼メニュー▼</td>
+    				</tr>
+    					<tr class="drop_menu"><td><a href="user_profile">ユーザー情報へ</a></td></tr>
+    					<tr class="drop_menu dialog_call_logout"><td><a href="#">ログアウト</a></td></tr>
+    				</table>
+				</div>
+		 	</div>
+		 	<div id="main">
+		<div id="game_map">
+			<img src="img/game_map.jpg"></img>
+		</div>
+		<div id="othello_map">
+			<input type="image" src="img/othello_map.jpg" name="button1" class="dialog_call game_name" value="オセロの対戦相手を探します"></input>
+		</div>
+		<div id="check_dialog">
+			よろしいですか？
+		</div>
+		<div id="check_dialog_logout">
+			よろしいですか？
+		</div>
+		</div>
+	</body>
+</html>

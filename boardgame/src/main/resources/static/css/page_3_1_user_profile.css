@@ -1,0 +1,49 @@
+@CHARSET "UTF-8";
+body{
+	position:absolute;
+	overflow-x : hidden ;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+  	left: 0px;
+  	margin: auto;
+}
+table.user_battle_log{
+	border: 1px #404040 solid;
+	font-weight:bold;
+}
+td.enemy_name{
+	width:300px;
+}
+td.days{
+	width:120px;
+	font-size:18px;
+}
+table.user_battle_log td{
+	border: 1px #404040 solid;
+	text-align:center;
+}
+
+table#log_table{
+	position:absolute;
+	top:30px;
+}"
+
+td.enemy_name{
+	font-size:18px;
+	width:310px;
+}
+table#log_header{
+	position: fixed !important;
+	position:absolute;
+	border: 1px #404040 solid;
+	font-weight:bold;
+	z-index:3;
+}
+table#log_header td{
+	border: 1px #404040 solid;
+	text-align:center;
+}
+tr.even{
+	background:#66FF99;
+}

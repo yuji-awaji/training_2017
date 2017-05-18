@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"></meta>
+<title>ログイン｜オセロゲーム</title>
+<link rel="stylesheet" href="./common/css/common.css" type="text/css"></link>
+<link rel="stylesheet" href="./css/page_1_login.css" type="text/css"></link>
+</head>
+<body background="./common/img/background.jpg">
+
+<!-- ヘッダ -->
+<header>
+	<div id="common_logo">
+	</div>
+</header>
+
+
+<!-- ロゴ -->
+<div id="common_logo">
+	<img src="./img/logo.JPG"></img>
+</div>
+
+
+<!-- メインコンテンツ -->
+<div class="main">
+
+<div class="main_contents">
+<h1 class="title">ログイン</h1>
+<form id="form_area" name="Login" method="post" action="4_menu.html">
+	<p><label class="id_label">ID</label><br></br><input class="input_area" type="text" name="id" placeholder="ID"></input></p>
+	<p><label class="pass_label">パスワード</label><br></br><input class="input_area" type="password" name="pass" placeholder="パスワード"></input></p>
+	<p class="error_msg">IDもしくはパスワードが違います</p>
+	<input class="common_button" type="submit" value="ログイン"></input>
+</form>
+
+<a href="signup	" class="link">新規登録</a>
+</div>
+</div>
+
+<!-- フッタ -->
+<footer>
+</footer>
+
+</body>
+</html>
