@@ -1,0 +1,138 @@
+@CHARSET "UTF-8";
+
+ #header{
+ 	position: absolute;
+ 	z-index:1;
+    background-color: #6db5a9;
+	top: 1px;
+	left: 0px;
+	right:0px;
+	bottom:0px;
+	margin: auto;
+  	margin-top:10px;
+	margin: auto;
+  	margin-top:10px;
+	border: 1px solid #444444;
+	border-right-width: 5px;
+	border-bottom-width: 4px;
+	height: 70px;
+	width:1060px;
+}
+#icon_area{
+	z-index:3;
+	position: absolute;
+	width: 70px;
+	height:70px;
+	background: #99FFFF;;
+	left:600px;
+	top:0px;
+
+
+}
+
+img#user_icon{
+	position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+	width:auto;
+	height:auto;
+	max-width:70px;
+	max-height:70px;
+
+}
+
+#info{
+	font-weight:bold;
+	text-align:center;
+	z-index:1;
+	position:absolute;
+	left:210px;
+	top:0px;
+	text-align:center;
+	background: #99FFFF;
+	height:70px;
+	width:390px;
+
+}
+#info h1{
+	position:absolute;
+	left:0px;
+	right:0px;
+	margin:auto;
+
+	top:0px;
+
+}
+
+#info p{
+	position:absolute;
+	font-size:22px;
+	left:0px;
+	right:0px;
+	margin:auto;
+
+	top:37px;
+}
+
+#logo img{
+	width:210px;
+	height:70px;
+}
+#dropdown
+	{
+	position: absolute;
+	left:670px;
+	top:0px;
+
+	}
+table#menu_table{
+	z-index:5;
+	background: #60F9C7;
+	border-spacing:0;
+	border-collapse:collapse
+	height:100px;
+	width:390px;
+}
+
+
+#menu_table td{
+
+	text-align: center;
+	border: 1px #404040 solid;
+    height:22px;
+    font-size:18px;
+    font-weight:bold;
+    background: #99FFFF;
+
+}
+
+
+
+td#name{
+	font-size:18px;
+	font-weight:bold;
+	height:35px;
+	background: #99FFFF;
+}
+
+td#drop_top{
+	width:100px;
+	text-align:center;
+	cursor : pointer;
+	font-weight:bold;
+	height:27px;
+	background: #99FFFF;
+
+}
+
+a{
+	color:#000000;
+}
+
+
+
+
+

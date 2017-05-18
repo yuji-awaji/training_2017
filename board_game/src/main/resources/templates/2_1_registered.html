@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<title>新規登録完了｜オセロゲーム</title>
+<link rel="stylesheet" href="./common/css/common.css" type="text/css"></link>
+<link rel="stylesheet" href="./css/page_2_1_registered.css" type="text/css"></link>
+
+</head>
+<body background="./common/img/background.jpg">
+
+<!-- ヘッダ -->
+<header>
+	<div id="common_logo">
+	</div>
+</header>
+
+
+<!-- ロゴ -->
+<div id="common_logo">
+	<img src="./img/logo.JPG"></img>
+</div>
+
+
+<!-- メインコンテンツ -->
+<div class="main">
+
+<div class="main_contents">
+<h1 class="title">登録完了</h1>
+	<p class="bold" th:text="${UserResult.nickName}+'さん登録完了しました！'"></p>
+	<p>プロフィール画像</p>
+	<div class="img_center">
+		<p th:text="${UserResult.imageURL}"></p>
+		<p class="img" th:if="${Image}"><img th:src="${UserResult.imageURL}" class="img_view"></img></p>
+		<p class="img" th:unless="${Image}"><img th:src="${UserResult.imageURL}" class="img_view"></img></p>
+
+	</div>
+	<div class="link">
+		<a href="/" class="link">ログインページへ</a>
+	</div>
+</div>
+</div>
+
+<!-- フッタ -->
+<footer>
+</footer>
+
+</body>
+</html>

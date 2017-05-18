@@ -1,0 +1,72 @@
+@CHARSET "UTF-8";
+
+/*bodyレイアウト*/
+.main {
+    width: 100%;
+}
+
+body{
+	text-align: center;
+	font-size: 18px;
+}
+
+div.main_contents{
+	width: 45%;
+	margin: 20px auto;
+	border: 1px solid #444444;
+	border-right-width: 5px;
+	border-bottom-width: 5px;
+	padding: 0px 100px 20px 100px;
+	background: #FAFAFA;
+}
+
+div.main{
+	text-align: center;
+}
+
+h1.title{
+	border-bottom: 3px solid #444444;
+}
+/*bodyレイアウトここまで*/
+
+/*リンクレイアウト*/
+.link{
+	text-decoration: none;
+	color: blue;
+	padding: 3px;
+	transition: 0.5s;
+}
+
+.link:visited {
+	color: blue;
+}
+
+.link:hover {
+	color: red;
+	text-decoration: underline;
+}
+
+.link:active {
+	color: red;
+}
+
+/*リンクレイアウトここまで*/
+
+
+/*メインコンテンツテキストレイアウト*/
+div.link{
+	margin: 50px 0px 0px 0px;
+	/*background-color: #80ff80;*/
+}
+
+.bold{
+	 font-weight:bold;
+}
+
+.img_view{
+	width:auto;
+	height:auto;
+	max-width:200px;
+	max-height:200px;
+}
+/*メインコンテンツテキストレイアウトここまで*/

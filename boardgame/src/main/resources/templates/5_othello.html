@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>対戦｜オセロゲーム</title>
+<link rel="stylesheet" href="./common/css/jquery-ui.css" type="text/css" />
+<link rel="stylesheet" href="./common/css/common.css" type="text/css" />
+<link rel="stylesheet" href="./css/page_5_othello.css" type="text/css" />
+
+<script type="text/javascript" src="./common/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="./common/js/jquery-ui.js"></script>
+<script type="text/javascript" src="./js/5_othello.js"></script>
+</head>
+<body background="./common/img/background.jpg">
+
+	<!-- 相手の情報表示エリア -->
+	<table id="enemy_area">
+		<tr>
+		<th rowspan="2" id="enemy_img_frame"><img src="./img/user_default.jpg" id="enemy_img" /></th>
+		<td id="enemy_nickname_area"><div id="enemy_nickname" class="enemy">テスト次郎</div></td>
+		<th rowspan="2" id="enemy_display">相手</th>
+		</tr>
+		<tr>
+		<td id="enemy_stone_color_area"><div id="enemy_stone_color">石の色:<img src="./img/stone_white.png" id="enemy_stone" /></div></td>
+		</tr>
+	</table>
+	<div id="turn">現在のターン:<img src="./img/stone_black.png" id="turn_stone" /></div>
+	<div id="chat_area">
+
+		<!-- メッセージ表示欄 -->
+		<div id="chat_message_area">
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">こんにちは～～～～～～～～～～～～～</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname enemy">テスト次郎</div><div class="chat_text enemy">こんにちは～～～～～～～～～～～～～</div></div>
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">今日はいい天気ですね</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname enemy">テスト次郎</div><div class="chat_text enemy">そうですね、暑いですね</div></div>
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">あ、そこいい手ですね・・・</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">あ、待った！</div></div>
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname enemy">テスト次郎</div><div class="chat_text enemy">待った機能はありませんよ（笑）</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">うーん、もどかしいなぁ・・・・</div></div>
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">ちょっと、長考します。5分ぐらい待ってください</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname enemy">テスト次郎</div><div class="chat_text enemy">了解です。じゃぁ、私お手洗い行ってきます</div></div>
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname enemy">テスト次郎</div><div class="chat_text enemy">もどりましたー</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">おかえりですー</div></div>
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">うーん、どう考えてもダメそうなので、投了しますね</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">お疲れ様でした</div></div>
+			<div class="odd"><div class="system_message">システムメッセージ</div><div class="chat_text system_message">テスト太郎さんが投了しました</div></div>
+			<div class="even"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname enemy">テスト次郎</div><div class="chat_text enemy">お疲れ様でした。また、対戦しましょうね</div></div>
+			<div class="odd"><div class="chat_img_frame"><img src="./img/user_default.jpg" class="chat_img" /></div><div class="chat_nickname myself">テスト太郎</div><div class="chat_text myself">そうですね、ランダムなので運次第ですが（笑）</div></div>
+			<div class="even"><div class="system_message">システムメッセージ</div><div class="chat_text system_message">テスト次郎さんが退出しました</div></div>
+		</div>
+		<input type="text" name="send" id="send_text" />
+		<input type="button" name="send_button" value="送信" class="common_button" id="send_button" onclick="transition()" />
+	</div>
+
+	<!-- オセロエリア（とりあえず画像で表示) -->
+	<div id="othello_area">
+		<div id="othello_img"></div>
+
+
+		<!-- 画面遷移用のボタン -->
+		<!--
+		** モック：置けるエリアの表示
+		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place1" /></a>
+		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place2" /></a>
+		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place3" /></a>
+		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place4" /></a>
+		** モック：置けるエリアの表示ここまで
+		-->
+
+		<!-- とりあえず、今は画像で
+		<canvas id="othello_canv"></canvas>  -->
+	</div>
+
+	<br /><br />
+
+	<!-- ボタンエリア -->
+	<div id="button_area">
+		<input type = "button" name="resign" value="投了" id="resign_button" class="common_button" /><br />
+		<input type = "button" name="skip" value="スキップ" class="common_button" id="skip_button" />
+		<input type = "button" name="leaving" value="退出" class="common_button" id="leaving_button" />
+	</div>
+
+	<!-- 自分の情報表示エリア -->
+	<table id="myself_area">
+		<tr>
+		<th rowspan="2" id="myself_img_frame"><img src="./img/user_default.jpg" id="myself_img" /></th>
+		<td><div id="myself_nickname" class="myself">テスト太郎</div></td>
+		<th rowspan="2" id="myself_display">自分</th>
+		</tr>
+		<tr>
+		<td><div id="myself_stone_color">石の色:<img src="./img/stone_black.png" id="myself_stone"/></div></td>
+		</tr>
+	</table>
+
+	<!-- ↓ダイアログの文面 -->
+
+	<!-- 対戦待機中のダイアログ -->
+	<div id="wait_dialog">
+			対戦待機中です<br />お待ちください
+	</div>
+
+	<!-- リザルトダイアログ -->
+	<div id="battle_confirmation_diaglog" style="display: none">
+		対戦者が見つかりました
+	</div>
+
+	<!-- キャンセル確認のダイアログ -->
+	<div id="cancel_confirmation_dialog" style="display:none">
+			よろしいですか？<br />
+	</div>
+
+	<!-- 投了確認ダイアログ -->
+	<div id="resign_dialog" style="display:none">
+			よろしいですか？<br />
+	</div>
+
+	<!-- リザルトダイアログ -->
+	<div id="result_dialog" style="display: none">
+		あなたの負けです
+	</div>
+	<!-- リザルトダイアログ -->
+	<div id="leaving_dialog" style="display: none">
+		よろしいですか？
+	</div>
+</body>
+</html>
