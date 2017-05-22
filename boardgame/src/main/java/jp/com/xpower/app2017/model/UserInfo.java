@@ -1,4 +1,4 @@
-package model;
+package jp.com.xpower.app2017.model;
 
 import java.io.Serializable;
 
