@@ -9,11 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jp.com.xpower.app2017.model.RoomCreate;
 import jp.com.xpower.app2017.model.ErrorMessage;
+import jp.com.xpower.app2017.model.ErrorMessage.Error;
+import jp.com.xpower.app2017.model.RoomCreate;
 import jp.com.xpower.app2017.model.SelectUserTable;
 import jp.com.xpower.app2017.model.UserTable;
-
 
 @Controller
 public class LoginController {
@@ -24,7 +24,7 @@ public class LoginController {
 	@Autowired
 	ErrorMessage errorMessage;
 	@RequestMapping("/menu")
-    public String menu(HttpSession session,Model model){
+    public String requestMenu(HttpSession session,Model model){
     	boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
     		    getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
     	//セッションにuserIdを保存
@@ -38,7 +38,6 @@ public class LoginController {
 	    		UserTable selectUserTable = userTable.selectUserTable(userId);
 	    		//ニックネームを取得
 	        	String nickname=selectUserTable.getNickname();
-	        	//画像パスを取得
 	        	//プロフィール画像をHTML上で表示するための、バイナリデータのBase64形式でのエンコード
 		        String encoded = Base64.getEncoder() .encodeToString(selectUserTable.getProfileImage());
 	        	//リクエストスコープに保存して送る
@@ -46,8 +45,8 @@ public class LoginController {
 	        	model.addAttribute("image",encoded);
 	            return "4_menu";
 	    	}catch(Exception e){
-	    		System.out.println(e);
-	    		model.addAttribute("errorMessage",errorMessage.databaseError());
+	    		session.invalidate();
+	    		model.addAttribute("errorMessage",Error.DATABASEERROR);
 	    		return "error";
 	    	}
 	    //デバッグでない場合、セッションスコープから取得
