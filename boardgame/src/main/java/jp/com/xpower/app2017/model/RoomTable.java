@@ -97,8 +97,8 @@ public class RoomTable{
 		this.battleStartTime = battleStartTime;
 	}
 
-	//部屋を作成する際の値をセットする
-	public RoomTable create(String userId,String gameId){
+	//部屋を作成する際の値をセットする 5月24日のレビューにてstaticを追加
+	public static RoomTable create(String userId,String gameId){
 		RoomTable createdRoom = new RoomTable();
 		createdRoom.setRoomMasterId(userId);
 		createdRoom.setGameId(gameId);
