@@ -9,8 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jp.com.xpower.app2017.model.ErrorMessage;
-import jp.com.xpower.app2017.model.ErrorMessage.Error;
+import jp.com.xpower.app2017.model.BoardGameConstant.Error;
 import jp.com.xpower.app2017.model.RoomCreate;
 import jp.com.xpower.app2017.model.SelectUserTable;
 import jp.com.xpower.app2017.model.UserTable;
@@ -21,8 +20,18 @@ public class LoginController {
 	SelectUserTable userTable;
 	@Autowired
 	RoomCreate roomTable;
-	@Autowired
-	ErrorMessage errorMessage;
+	//ログアウトが押された時の処理
+    @RequestMapping("/logout")//5月19日 メンバー間で命名規則再確認、変更
+    //5月23日 MenuControllerから移動
+    public String logout(HttpSession session) {
+    	session.invalidate();//セッション破棄
+        return "1_login";
+    }
+
+    @RequestMapping("/login")//5月19日 メンバー間で命名規則再確認、変更
+    public String login(HttpSession session) {
+        return "1_login";
+    }
 	@RequestMapping("/menu")
     public String requestMenu(HttpSession session,Model model){
     	boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
@@ -32,7 +41,7 @@ public class LoginController {
     	//デバッグモードかどうか判定
     	//デバッグの場合、セッションスコープに保存
     	if(isDebug){
-	    	userId = "bbbb";
+	    	userId = "aaaa";
 	    	session.setAttribute("userId", userId);
 	    	try{
 	    		UserTable selectUserTable = userTable.selectUserTable(userId);
@@ -41,8 +50,8 @@ public class LoginController {
 	        	//プロフィール画像をHTML上で表示するための、バイナリデータのBase64形式でのエンコード
 		        String encoded = Base64.getEncoder() .encodeToString(selectUserTable.getProfileImage());
 	        	//リクエストスコープに保存して送る
-	        	model.addAttribute("nickname",nickname);
-	        	model.addAttribute("image",encoded);
+	        	session.setAttribute("nickname", nickname);
+	        	session.setAttribute("image", encoded);
 	            return "4_menu";
 	    	}catch(Exception e){
 	    		session.invalidate();
@@ -51,6 +60,13 @@ public class LoginController {
 	    	}
 	    //デバッグでない場合、セッションスコープから取得
     	}else{
+    		//ログイン確認
+        	userId = (String) session.getAttribute("userId");
+        	if(userId == null){
+        		session.invalidate();//セッション破棄
+        		model.addAttribute("errorMessage",Error.SESSIONERROR);
+        		return "/error";
+        	}
     		return "4_menu";
     	}
     }
