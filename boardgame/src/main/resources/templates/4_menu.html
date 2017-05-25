@@ -26,17 +26,17 @@
 				<p>―ゲーム選択―</p>
 			</div>
 			<div id="icon_area">
-				<img th:src="'data:image/'+${image_type}+';base64,'+${image}"  id="user_icon"></img>
+				<img th:src="'data:session.image/'+${session.image_type}+';base64,'+${session.image}"  id="user_icon"></img>
 			</div>
 			<div id="dropdown">
 				<table id="menu_table">
 					<tr>
-						<td id="name" th:text="${nickname}"></td>
+						<td id="name"th:inline="text">[[${session.nickname}]]</td>
 				    </tr>
 	    			<tr class="drop_top">
 						<td id="drop_top">▼メニュー▼</td>
     				</tr>
-    					<tr class="drop_menu"><td><a href="user_profile">ユーザー情報へ</a></td></tr>
+    					<!-- 工事中<tr class="drop_menu"><td><a href="user_profile">ユーザー情報へ</a></td></tr> -->
     					<tr class="drop_menu dialog_call_logout"><td><a href="#">ログアウト</a></td></tr>
     				</table>
 				</div>
