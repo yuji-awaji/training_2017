@@ -1,73 +1,67 @@
 package jp.com.xpower.app2017.controller;
 
 import java.util.Base64;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jp.com.xpower.app2017.model.BoardGameConstant.Error;
 import jp.com.xpower.app2017.model.RoomCreate;
-import jp.com.xpower.app2017.model.SelectUserTable;
+import jp.com.xpower.app2017.model.UserInfo;
 import jp.com.xpower.app2017.model.UserTable;
+import jp.com.xpower.app2017.model.UserTableRepository;
 
 @Controller
 public class LoginController {
 	@Autowired
-	SelectUserTable userTable;
+	UserTableRepository userTableRepository;
 	@Autowired
 	RoomCreate roomTable;
 	//ログアウトが押された時の処理
-    @RequestMapping("/logout")//5月19日 メンバー間で命名規則再確認、変更
+    @RequestMapping("/logout")//5月19日 メンバー間で命名規則再確認、変更  5月26日 仮ログインのために変更
     //5月23日 MenuControllerから移動
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session,Model model) {
     	session.invalidate();//セッション破棄
+    	model.addAttribute("UserInfo", new UserInfo());
+    	return "1_login";
+    }
+
+
+    @RequestMapping("/login")//5月26日 仮ログインのために変更
+    public String login(Model model) {
+    	model.addAttribute("UserInfo", new UserInfo());
         return "1_login";
     }
 
-    @RequestMapping("/login")//5月19日 メンバー間で命名規則再確認、変更
-    public String login(HttpSession session) {
-        return "1_login";
-    }
-	@RequestMapping("/menu")
-    public String requestMenu(HttpSession session,Model model){
-    	boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
-    		    getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
-    	//セッションにuserIdを保存
-    	String userId;
-    	//デバッグモードかどうか判定
-    	//デバッグの場合、セッションスコープに保存
-    	if(isDebug){
-	    	userId = "aaaa";
-	    	session.setAttribute("userId", userId);
-	    	try{
-	    		UserTable selectUserTable = userTable.selectUserTable(userId);
-	    		//ニックネームを取得
-	        	String nickname=selectUserTable.getNickname();
-	        	//プロフィール画像をHTML上で表示するための、バイナリデータのBase64形式でのエンコード
-		        String encoded = Base64.getEncoder() .encodeToString(selectUserTable.getProfileImage());
-	        	//リクエストスコープに保存して送る
-	        	session.setAttribute("nickname", nickname);
-	        	session.setAttribute("image", encoded);
-	            return "4_menu";
-	    	}catch(Exception e){
-	    		session.invalidate();
-	    		model.addAttribute("errorMessage",Error.DATABASEERROR);
-	    		return "error";
-	    	}
-	    //デバッグでない場合、セッションスコープから取得
-    	}else{
-    		//ログイン確認
-        	userId = (String) session.getAttribute("userId");
-        	if(userId == null){
-        		session.invalidate();//セッション破棄
-        		model.addAttribute("errorMessage",Error.SESSIONERROR);
-        		return "/error";
-        	}
-    		return "4_menu";
+	@PostMapping("/menu")//5月26日 仮ログインのために変更
+    public String requestMenu(HttpSession session,Model model,@ModelAttribute UserInfo userInfo){
+    	String formUserId = userInfo.getId();
+    	List<UserTable> matchedUsers = userTableRepository.findByUserId(formUserId);
+    	if(matchedUsers.isEmpty()){
+    		model.addAttribute("errorMessage","入力したユーザーは存在しません");
+    		return "/error";
     	}
+    	UserTable matchedUser = matchedUsers.get(0);
+        String encoded = Base64.getEncoder() .encodeToString(matchedUser.getProfileImage());
+        String formPassword = userInfo.getPassword();
+    	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();// Bcryptによるハッシュ化インスタンス生成
+    	//パスワードの比較
+		if(!bcrypt.matches(formPassword, matchedUser.getPassword())){
+			model.addAttribute("errorMessage","パスワードが間違っています");
+    		return "/error";
+		}
+        session.setAttribute("userId", formUserId);
+        session.setAttribute("nickname", matchedUser.getNickname());
+      //プロフィール画像をHTML上で表示するための、バイナリデータのBase64形式でのエンコード
+        session.setAttribute("image", encoded);
+
+    	return "4_menu";
     }
 }
