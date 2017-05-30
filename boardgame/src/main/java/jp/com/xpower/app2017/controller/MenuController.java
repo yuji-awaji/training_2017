@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.com.xpower.app2017.model.BoardGameConstant.Error;
-import jp.com.xpower.app2017.model.RoomState.State;
+import jp.com.xpower.app2017.model.BoardGameConstant.State;
 import jp.com.xpower.app2017.model.RoomTable;
 import jp.com.xpower.app2017.model.RoomTableRepository;
 

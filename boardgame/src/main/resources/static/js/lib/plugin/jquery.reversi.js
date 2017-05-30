@@ -71,7 +71,7 @@ $(function() {
 			var turn = CLASS_BLACK;
 
 
-			//websocketの設定
+			/*//websocketの設定
 			var ws = new WebSocket("ws://localhost:8080/echo");
 		    ws.onopen = function(){
 		    };
@@ -83,14 +83,16 @@ $(function() {
 		    	var put = obj.split(",");
 		    	//盤面の更新
 		    	upsets(board , put[2] , put[0] , put[1]);
-		    	//console.log(put[2]);
 		    };
 		    ws.onerror = function(event){
 		        alert("接続に失敗しました。");
-		    };
+		    };*/
+
+
 
 			//盤が押されたときの処理
 			$(this).eq(0).bind(EVENT_REVERSI_PUT , function(e , data){
+
 
 				//自分の石の色でない場合はクリック不可能
 				/*if(turn != defaults.my_color){
@@ -112,19 +114,11 @@ $(function() {
 				//石を置く
 				upsets(board , turn , data.col , data.row);
 
-				$.ajax({
-			          type: 'post',
-			          url: 'http://localhost:8080/othello',
-			          test:{test:1},
-			          success: function(test){
-			        	  console.log(test);
-			          }
-			        });
-
-
 				//石を置いたら相手の画面にも反映される
-				var put = [data.col,data.row,turn];
-				ws.send(put);
+				/*var put = [data.col,data.row,turn];
+				ws.send(put);*/
+
+
 
 				//終了判定
 				if(isFinish(this)){
@@ -134,19 +128,24 @@ $(function() {
 					//勝ちの判定
 					var text = '<h5>' + ((black < white) ? 'white' : 'black') +  ' win!!</h5>';
 
+					result(black, white, turn);
+
 					if(black == white){
 						text = '<h5>drow</h5>';
 					}
 					//text += '<p>It is reload when playing a game again as for a browser. </p>';
 
-					showDialog(text , _messageDialog);
+					//showDialog(text , _messageDialog);
+					$('#leaving_button').attr('disabled', false);
+					$('#resign_button').attr('disabled', true);
 					return;
 				}
 
+				//確認用
+				//result(black, white, turn);
+
 				//相手のターンにチェンジ
 				turn = nextTurn(board , (turn == CLASS_BLACK) ? CLASS_WHITE : CLASS_BLACK , _messagebar);
-				//console.log(turn);
-
 
 				if(opts.cpu && turn != opts.my_color){
 					cpuTurn(this , board , turn);
@@ -240,47 +239,80 @@ $(function() {
 		if(!board[col][row].hasClass(CLASS_HIGHLIGHT)){
 			return false;
 		}
-		var firstPut = board[col][row];
-		firstPut.removeClass(CLASS_HIGHLIGHT);
-		firstPut.addClass(CLASS_BLANK);
+		var onPut = board[col][row];
+		onPut.removeClass(CLASS_HIGHLIGHT);
+		onPut.addClass(CLASS_BLANK);
 	}
 
 	/**
 	* 追記
 	* ハイライトの設定
 	*/
-		function setHighlight(board, turn, cols, rows){
-			//ハイライト部分をブランクに戻す
-			for(var i = 0; i < cols; i++){
-			for(var k = 0; k < rows; k++){
-				if(board[i][k].hasClass(CLASS_HIGHLIGHT)){
-					var firstPut = board[i][k];
-					firstPut.removeClass(CLASS_HIGHLIGHT);
-					firstPut.addClass(CLASS_BLANK);
-				}
-			}
-			}
-		/**
-		* 石を置ける場所を探して
-		* ハイライト表示を行う
-		*/
-		//石を置ける場所を探す
-		var array = [];
+	function setHighlight(board, turn, cols, rows){
+		//ハイライト部分をブランクに戻す
 		for(var i = 0; i < cols; i++){
-			for(var k = 0; k < rows; k++){
-				if(canPut(board, turn, i, k)){
-					array.push([i, k]);
-				}
-			}
-			}
-			//ハイライト表示の設定
-			for(var i = 0; i < array.length; i++){
-				var value = array[i];
-				var boardPut = board[value[0]][value[1]];
-				boardPut.removeClass(CLASS_BLANK);
-				boardPut.addClass(CLASS_HIGHLIGHT);
+		for(var k = 0; k < rows; k++){
+			if(board[i][k].hasClass(CLASS_HIGHLIGHT)){
+				var onPut = board[i][k];
+				onPut.removeClass(CLASS_HIGHLIGHT);
+				onPut.addClass(CLASS_BLANK);
 			}
 		}
+		}
+	/**
+	* 石を置ける場所を探して
+	* ハイライト表示を行う
+	*/
+	//石を置ける場所を探す
+	var array = [];
+	for(var i = 0; i < cols; i++){
+		for(var k = 0; k < rows; k++){
+			if(canPut(board, turn, i, k)){
+				array.push([i, k]);
+			}
+		}
+		}
+		//ハイライト表示の設定
+		for(var i = 0; i < array.length; i++){
+			var value = array[i];
+			var boardPut = board[value[0]][value[1]];
+			boardPut.removeClass(CLASS_BLANK);
+			boardPut.addClass(CLASS_HIGHLIGHT);
+		}
+	}
+
+	/*
+	 *追記
+	 *ajax通信で勝敗結果を送信
+	 * */
+	function result(black, white){
+		if(black > white){
+			var masterId = "win";
+		}else if(black < white){
+			var masterId = "lose";
+		}
+
+		var data = {
+				masterResult : masterId,
+			};
+		$.ajax({
+			type:"POST",
+			url:"/othello",
+			data:JSON.stringify(data),
+			contentType: 'application/json',
+			dataType: "json",
+			success: function(json_data) {
+				success(data);
+			},
+			error: function() {
+				alert("XMLHttpRequest : " + XMLHttpRequest.status);
+			},
+		});
+		function success(data){
+			alert("ajax通信成功");
+			console.log(data);
+		}
+	}
 
 	/**
 	 * 石を置いて周りの石をひっくり返す。
@@ -305,6 +337,16 @@ $(function() {
 		});
 	}
 
+
+/*	var img = new Array();
+
+	img[0] = new Image();
+	img[0].src = "画像パス";
+	img[1] = new Image();
+	img[1].src = "画像パス";
+	var cnt=0*/;
+
+
 	/**
 	 * 次のターンの色を決定する。
 	 * 全く置く場所がなかった場合はパスとなり相手のターンとなる。
@@ -317,6 +359,17 @@ $(function() {
 				if(board[i][k].hasClass(CLASS_BLANK)){
 					//置く場所があった場合、相手のターンになる
 					if(canPut(board , nextTurn , i , k)){
+						var ImgSrc = $("img#turn_stone").attr("src");
+
+						/*
+						if (cnt == 2){
+							cnt=0;
+						}else{
+							cnt++;
+						}
+						document.getElementById("turn_stone").src=img[cnt].src;*/
+
+
 						return nextTurn;
 					}
 				}
@@ -324,7 +377,8 @@ $(function() {
 		}
 
 		//path
-		showMessage(nextTurn + ' path.' , _messagebar);
+		//スキップボタンの表示
+		//$('#skip_button').attr("disabled",false);
 		return (nextTurn == CLASS_BLACK) ? CLASS_WHITE : CLASS_BLACK;
 	}
 
@@ -439,4 +493,64 @@ $(function() {
 				   .fadeIn(90);
 	}
 
-})(jQuery);
+
+    //投了ボタンが押されたのを検知する。
+    $( '#resign_button' ) . click( function() {
+        $( '#resign_dialog' ) . dialog( 'open' );
+    } );
+
+	//投了確認ダイアログ
+    $( '#resign_dialog' ) . dialog( {
+        title:"投了します",
+        closeOnEscape:false,//エスケープキーでとじないように
+        dialogClass:"no-close",//×ボタンを消す処理
+        resizable:false,//サイズを変えられないように
+        modal:true,//表示中はほかの処理をいじれないように
+    	autoOpen: false,//勝手に開かないように
+        buttons:{
+        	"はい":function(){
+        		$(this).dialog('close');
+        		$('#result_dialog').dialog('open');
+        		//投了ボタンの非表示
+        		$('#resign_button').attr('disabled', true);
+        		//スキップボタンの非表示
+        		$('#skip_button').attr('disabled', true);
+        		//退出ボタンの表示
+        		$('#leaving_button').attr('disabled', false);
+
+        		//ルームの状態を変更する。
+        		var data = {
+        				roomState : "2",
+        			};
+        		$.ajax({
+        			type:"POST",
+        			url:"/endgame",
+        			data:JSON.stringify(data),
+        			contentType: 'application/json',
+        			dataType: "json",
+        			});
+
+        	},
+        	"いいえ":function(){
+        		$(this).dialog('close');
+        	}
+        }
+    } );
+
+    //勝敗表示ダイアログの処理
+    $('#result_dialog').dialog({
+    	autoOpen:false,
+    	dialogClass:"no-close",//×ボタンを消す処理
+    	closeOnEscape:false,//エスケープキーでとじないように
+    	title:'結果',
+    	modal:true,
+    	dialogClass:"no-close",
+    	resizable:false,
+    	buttons:{
+    		"OK":function(){
+	       		$(this).dialog('close');
+	       	}
+		}
+    });
+
+});

@@ -27,11 +27,11 @@
 
 <div class="main_contents">
 <h1 class="title">ログイン</h1>
-<form id="form_area" name="Login" action="#" th:action="@{/menu}"
+<form id="form_area" name="Login" action="#" th:action="@{/loginMenu}"
 				th:object="${UserInfo}"  method="post">
 	<p><label class="id_label">ID</label><br></br><input class="input_area" type="text" name="id" placeholder="ID" th:field="*{id}"></input></p>
 	<p><label class="pass_label">パスワード</label><br></br><input class="input_area" type="password" name="pass" placeholder="パスワード" th:field="*{password}"></input></p>
-	<p class="error_msg">IDもしくはパスワードが違います</p>
+	<p class="error_msg" style="display: none">IDもしくはパスワードが違います</p>
 	<input class="common_button" type="submit" value="ログイン"></input>
 </form>
 
