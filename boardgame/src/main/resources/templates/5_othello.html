@@ -1,27 +1,51 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>対戦｜オセロゲーム</title>
-<link rel="stylesheet" href="./common/css/jquery-ui.css" type="text/css" />
-<link rel="stylesheet" href="./common/css/common.css" type="text/css" />
-<link rel="stylesheet" href="./css/page_5_othello.css" type="text/css" />
+<link rel="stylesheet" href="./common/css/jquery-ui.css" type="text/css">
+<link rel="stylesheet" href="./common/css/common.css" type="text/css">
+<link rel="stylesheet" href="./css/page_5_othello.css" type="text/css">
+
+<!-- jqueryオセロcss -->
+<link href="./js/lib/plugin/jquery.reversi.css" rel="stylesheet" type="text/css" media="all">
 
 <script type="text/javascript" src="./common/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="./common/js/jquery-ui.js"></script>
 <script type="text/javascript" src="./js/5_othello.js"></script>
+
+<!-- jqueryオセロjs -->
+<script type="text/javascript" src="./js/lib/plugin/jquery.reversi.js"></script>
+
+<script type="text/javascript">
+	$(function() {
+		$('#othello_board').reversi({cpu:false , width:480 , height : 480});
+	});
+</script>
+
+
 </head>
 <body background="./common/img/background.jpg">
 
 	<!-- 相手の情報表示エリア -->
 	<table id="enemy_area">
 		<tr>
-		<th rowspan="2" id="enemy_img_frame"><img src="./img/user_default.jpg" id="enemy_img" /></th>
-		<td id="enemy_nickname_area"><div id="enemy_nickname" class="enemy">テスト次郎</div></td>
+		<th rowspan="2" id="enemy_img_frame">
+		</th>
+		<td id="enemy_nickname_area"><div id="enemy_nickname" class="enemy"></div></td>
 		<th rowspan="2" id="enemy_display">相手</th>
 		</tr>
 		<tr>
-		<td id="enemy_stone_color_area"><div id="enemy_stone_color">石の色:<img src="./img/stone_white.png" id="enemy_stone" /></div></td>
+		<td id="enemy_stone_color_area"><div id="enemy_stone_color">
+			石の色:
+			<span th:if="${session.isMasterFlag}">
+				<img src="./img/stone_white.png" id="myself_stone"/>
+			</span>
+			<span th:unless="${session.isMasterFlag}">
+				<img src="./img/stone_black.png" id="myself_stone"/>
+			</span>
+			</div>
+		</td>
 		</tr>
 	</table>
 	<div id="turn">現在のターン:<img src="./img/stone_black.png" id="turn_stone" /></div>
@@ -54,21 +78,7 @@
 
 	<!-- オセロエリア（とりあえず画像で表示) -->
 	<div id="othello_area">
-		<div id="othello_img"></div>
-
-
-		<!-- 画面遷移用のボタン -->
-		<!--
-		** モック：置けるエリアの表示
-		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place1" /></a>
-		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place2" /></a>
-		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place3" /></a>
-		** <a href="5_2_othello.html"><img src="./img/othello_place.jpg"id="othello_place4" /></a>
-		** モック：置けるエリアの表示ここまで
-		-->
-
-		<!-- とりあえず、今は画像で
-		<canvas id="othello_canv"></canvas>  -->
+		<div id="othello_board"><!-- jqueryによるオセロ表示用 --></div>
 	</div>
 
 	<br /><br />
@@ -83,16 +93,34 @@
 	<!-- 自分の情報表示エリア -->
 	<table id="myself_area">
 		<tr>
-		<th rowspan="2" id="myself_img_frame"><img src="./img/user_default.jpg" id="myself_img" /></th>
-		<td><div id="myself_nickname" class="myself">テスト太郎</div></td>
+		<th rowspan="2" id="myself_img_frame">
+		<img th:src="'data:session.image/'+${session.image_type}+';base64,'+${session.image}" id="myself_img"></img>
+		<!-- <img src="./img/user_default.jpg" id="myself_img" /> -->
+		</th>
+		<td><div id="myself_nickname" class="myself" th:inline="text">[[${session.nickname}]]</div></td>
 		<th rowspan="2" id="myself_display">自分</th>
 		</tr>
 		<tr>
-		<td><div id="myself_stone_color">石の色:<img src="./img/stone_black.png" id="myself_stone"/></div></td>
+		<td>
+			<div id="myself_stone_color">
+				石の色:
+				<span th:if="${session.isMasterFlag}">
+					<img src="./img/stone_black.png" id="myself_stone"/>
+				</span>
+				<span th:unless="${session.isMasterFlag}">
+					<img src="./img/stone_white.png" id="myself_stone"/>
+				</span>
+
+			</div>
+		</td>
 		</tr>
 	</table>
 
 	<!-- ↓ダイアログの文面 -->
+	<!--
+		jquery-uiではタイトルとボタン部分以外はjsに記載できない
+		本文はHTMLから取ってくる
+	 -->
 
 	<!-- 対戦待機中のダイアログ -->
 	<div id="wait_dialog">
