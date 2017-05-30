@@ -2,10 +2,7 @@ package jp.com.xpower.app2017.model;
 
 import java.util.ArrayList;
 
-import org.springframework.stereotype.Service;
-
-//エラーメッセージの表示の管理インスタンス
-@Service
+//エラーメッセージの表示フラグの管理インスタンス
 public class SignupError {
 	ArrayList<String> errorMessage = new ArrayList<String>();
 	public ArrayList<String> getErrorMessage() {

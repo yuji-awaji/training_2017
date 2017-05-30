@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jp.com.xpower.app2017.model.BoardGameConstant.State;
-import jp.com.xpower.app2017.model.OthelloInfo;
 import jp.com.xpower.app2017.model.RoomTable;
 import jp.com.xpower.app2017.model.RoomTableRepository;
 import jp.com.xpower.app2017.model.SelectUserTable;
@@ -61,9 +60,9 @@ public class OthelloController {
 		RoomTable getRoom = (RoomTable) session.getAttribute("room");
 		//5/25指摘：サービスクラスに分ける
 		//getRoom.getRoomId()を引数にしてcheckedRoomをリターン
-		//RoomTable checkedRoom = roomTableRepository.findOne(getRoom.getRoomId());
-		OthelloInfo othelloinfo = new OthelloInfo();
-		RoomTable checkedRoom = othelloinfo.getCheckRoom(getRoom.getRoomId(), roomTableRepository);
+		RoomTable checkedRoom = roomTableRepository.findOne(getRoom.getRoomId());
+		//OthelloInfo othelloinfo = new OthelloInfo();
+		//RoomTable checkedRoom = othelloinfo.getCheckRoom(getRoom.getRoomId(), roomTableRepository);
 		//5/25指摘：チャレンジャーと対戦開始時刻がnullになる
 		//セッションに詰めなおして解決
 		session.setAttribute("room", checkedRoom);

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 public class SelectUserTable {
 	@Autowired
 	UserTableRepository userTableRepository;
-	//ニックネームを取得する
+	//ユーザーテーブルを取得する
     public UserTable selectUserTable(String userId){
     	//userIdにひもづけた情報を取得
         List<UserTable> selectList = userTableRepository.findByUserId(userId);
