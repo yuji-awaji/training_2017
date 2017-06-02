@@ -18,7 +18,7 @@
 /*白石*/
 .reversi_board .white{
 	border:0px :none;
-	border-radius:10px;
+	border-radius:50px;
 		-webkit-border-radius:30px;
 		-moz-border-radius:20px;
 	background:#ffffff;
@@ -40,7 +40,7 @@
 
 /*黒石*/
 .reversi_board .black{
-	border-radius:10px;
+	border-radius:50px;
 		-webkit-border-radius:30px;
 		-moz-border-radius:20px;
 	background:#000000;

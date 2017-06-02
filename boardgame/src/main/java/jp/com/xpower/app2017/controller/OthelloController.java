@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.com.xpower.app2017.model.BoardGameConstant.Error;
 import jp.com.xpower.app2017.model.BoardGameConstant.State;
+import jp.com.xpower.app2017.model.OthelloInfo;
 import jp.com.xpower.app2017.model.RoomTable;
 import jp.com.xpower.app2017.model.RoomTableRepository;
 import jp.com.xpower.app2017.model.SelectUserTable;

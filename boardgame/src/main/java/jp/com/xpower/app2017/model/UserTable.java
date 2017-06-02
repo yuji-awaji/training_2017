@@ -35,9 +35,7 @@ public class UserTable{
 	@Column(nullable = false)
 	private int draw;
 
-	public UserTable(){
 
-	}
 
 
 	public String getPassword() {

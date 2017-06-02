@@ -88,7 +88,7 @@ $(function() {
 
 
 			//websocketの設定
-			ws = new WebSocket("ws://localhost:8080/echo?" + options.roomid);
+			ws = new WebSocket("ws://34.225.159.33:8080/echo?" + options.roomid);
 
 		    ws.onopen = function(){
 		    };
@@ -157,7 +157,7 @@ $(function() {
 		    };
 		    ws.onerror = function(event){
 		        alert("接続に失敗しました。");
-		    };*/
+		    };
 
 
 
