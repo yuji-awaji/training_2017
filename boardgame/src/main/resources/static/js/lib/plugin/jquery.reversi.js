@@ -31,7 +31,7 @@ $(function() {
 	var CLASS_BLANK = 'blank';
 	var CLASS_BLACK = 'black';
 	var CLASS_WHITE = 'white';
-	var CLASS_HIGHLIGHT = 'blank highlight';
+	var CLASS_HIGHLIGHT = 'highlight';
 
 	var CLASS_MESSAGE_BAR    = 'message_bar';
 	var CLASS_MESSAGE_DIALOG = 'message_dialog';
@@ -41,6 +41,10 @@ $(function() {
 
 	/** alert message */
 	var MESSAGE_CANT_PUT  = 'It is not possible to put it there.';
+
+	var myColor = 'black';
+
+	var ws;
 
 	$.fn.reversi = function(options){
 		/**
@@ -52,8 +56,17 @@ $(function() {
 			cols  : 8   , //マス(横)
 			rows  : 8   , //マス(縦)
 			width : 296 , //縦幅
-			height: 296   //横幅
+			height: 296 ,  //横幅
+			roomid: -1
 		};
+
+		myColor = options.my_color;
+
+		//ルームIDがセットされていない
+		if(options.roomid < 0){
+			//エラー処理
+			return;
+		}
 
 		return this.each(function(){
 			var opts = $.extend(defaults , options);
@@ -70,9 +83,11 @@ $(function() {
 			var _messageDialog = createMessageDialog(this , opts.width);
 			var turn = CLASS_BLACK;
 
+			//ハイライト設定
+			setHighlight(board, turn, defaults.cols, defaults.rows);
 
 			//websocketの設定
-			var ws = new WebSocket("ws://localhost:8080/echo");
+			ws = new WebSocket("ws://localhost:8080/echo?" + options.roomid);
 		    ws.onopen = function(){
 		    };
 		    ws.onclose = function(){
@@ -81,79 +96,95 @@ $(function() {
 		    ws.onmessage = function(message){
 		    	var obj = message.data;
 		    	var put = obj.split(",");
+
+		    	//endの場合は投了処理
+		    	if(put[0] == 'end'){
+		    		var result = put[1];
+		    		console.log(myColor);
+		    		if(myColor != 'black'){
+		    			//自分の色が白なら、挑戦者の結果を参照する
+		    			result = put[2];
+		    		}
+					//オセロ盤終了
+					endBoard(board);
+		    		sendResult(result);
+		    		return;
+		    	}
+
 		    	//盤面の更新
-		    	upsets(board , put[2] , put[0] , put[1]);
-		    	//console.log(put[2]);
+		    	upsets(board , put[3] , put[1] , put[2]);
+
+				//終了判定
+				if(isFinish	(board)){
+					var black = $('#othello_board').find('.' + CLASS_BLACK).length;
+					var white = $('#othello_board').find('.' + CLASS_WHITE).length;
+
+					var winColor = (black < white) ? 'white' : 'black';
+					var result ='lose';
+
+					if(winColor == myColor){
+						result ="win";
+					}else if(black == white){
+						result = 'drow';
+					}
+
+					//オセロ盤終了
+					endBoard(board);
+
+					//結果を送信
+					sendResult(result);
+
+	        		//投了ボタンの非表示
+	        		$('#resign_button').attr('disabled', true);
+	        		//スキップボタンの非表示
+	        		$('#skip_button').attr('disabled', true);
+	        		//退出ボタンの表示
+	        		$('#leaving_button').attr('disabled', false);
+
+					return;
+				}
+
+
+				//相手のターンにチェンジ
+				turn = nextTurn(board , (turn == CLASS_BLACK) ? CLASS_WHITE : CLASS_BLACK , _messagebar);
+
+				//ハイライト設定
+				setHighlight(board, turn, defaults.cols, defaults.rows);
+
 		    };
 		    ws.onerror = function(event){
 		        alert("接続に失敗しました。");
 		    };
 
+
+
 			//盤が押されたときの処理
 			$(this).eq(0).bind(EVENT_REVERSI_PUT , function(e , data){
 
+
 				//自分の石の色でない場合はクリック不可能
-				/*if(turn != defaults.my_color){
-					$.on("click",function(e){
-						e.preventDefault();
-						}
-					);
-				}*/
+				if(turn != defaults.my_color){
+					return;
+				}
 
 				//ハイライト初期化
 				resetHighlight(board , data.col , data.row);
 
 				//ひっくり返せないので置けない。
 				if(!canPut(board , turn , data.col , data.row)){
+					console.log("おけない");
 					showMessage(MESSAGE_CANT_PUT , _messagebar);
 					return;
 				}
 
-				//石を置く
-				upsets(board , turn , data.col , data.row);
-
-				$.ajax({
-			          type: 'post',
-			          url: 'http://localhost:8080/othello',
-			          test:{test:1},
-			          success: function(test){
-			        	  console.log(test);
-			          }
-			        });
-
-
 				//石を置いたら相手の画面にも反映される
-				var put = [data.col,data.row,turn];
+				var put = ['put',data.col,data.row,turn];
 				ws.send(put);
-
-				//終了判定
-				if(isFinish(this)){
-					var black = $(this).find('.' + CLASS_BLACK).length;
-					var white = $(this).find('.' + CLASS_WHITE).length;
-
-					//勝ちの判定
-					var text = '<h5>' + ((black < white) ? 'white' : 'black') +  ' win!!</h5>';
-
-					if(black == white){
-						text = '<h5>drow</h5>';
-					}
-					//text += '<p>It is reload when playing a game again as for a browser. </p>';
-
-					showDialog(text , _messageDialog);
-					return;
-				}
-
-				//相手のターンにチェンジ
-				turn = nextTurn(board , (turn == CLASS_BLACK) ? CLASS_WHITE : CLASS_BLACK , _messagebar);
-				//console.log(turn);
 
 
 				if(opts.cpu && turn != opts.my_color){
 					cpuTurn(this , board , turn);
 				}
-
-				//ハイライト表示の設定
-				setHighlight(board, turn, cols, rows);
 			});
 
 			//先手が白の場合
@@ -189,15 +220,10 @@ $(function() {
 
 				// ○●
 				// ●○
-				//加えて、置けるエリアの表示
 				if((i == (cols / 2) - 1 && k == (rows / 2) - 1)  || (i == (cols / 2) && k == (rows / 2))){
-					style_name = CLASS_BLACK;
-				}else if((i == (cols / 2) - 1 && k == (rows / 2)) || (i == (cols / 2) && k == (rows / 2) - 1)){
 					style_name = CLASS_WHITE;
-				}else if(((i == (cols / 2) - 1 && k == (rows / 2) + 1) || (i == (cols / 2) && k == (rows / 2) - 2)) && myColor == CLASS_BLACK){
-					style_name = CLASS_HIGHLIGHT;
-				}else if(((i == (cols / 2) - 2 && k == (rows / 2)) || (i == (cols / 2) + 1 && k == (rows / 2) - 1)) && myColor == CLASS_BLACK){
-					style_name = CLASS_HIGHLIGHT;
+				}else if((i == (cols / 2) - 1 && k == (rows / 2)) || (i == (cols / 2) && k == (rows / 2) - 1)){
+					style_name = CLASS_BLACK;
 				}
 
 				board[i][k] = $("<div/>", {
@@ -208,6 +234,7 @@ $(function() {
 									}).appendTo(board_element);
 			}
 		}
+
 
 		$(board_element).click(function(e){
 			var target = $(e.target);
@@ -227,8 +254,25 @@ $(function() {
 	 * ゲームが終わっているか
 	 * @returns boolean
 	 */
-	function isFinish(board_elements){
-		return (0 == $(board_elements).find('.' + CLASS_BLANK).length);
+	function isFinish(board){
+		//石を置ける場所を探す
+		var array = [];
+		for(var i = 0; i < 8; i++){
+			for(var k = 0; k < 8; k++){
+				if(canPut(board, 'white', i, k)){
+					array.push([i, k]);
+				}
+			}
+		}
+		for(var i = 0; i < 8; i++){
+			for(var k = 0; k < 8; k++){
+				if(canPut(board, 'balck', i, k)){
+					array.push([i, k]);
+				}
+			}
+		}
+
+		return (0 == $('#othello_board').find('.' + CLASS_BLANK).length) || (array.length == 0);
 	}
 
 
@@ -240,26 +284,39 @@ $(function() {
 		if(!board[col][row].hasClass(CLASS_HIGHLIGHT)){
 			return false;
 		}
-		var firstPut = board[col][row];
-		firstPut.removeClass(CLASS_HIGHLIGHT);
-		firstPut.addClass(CLASS_BLANK);
+		var onPut = board[col][row];
+		onPut.removeClass(CLASS_HIGHLIGHT);
+	}
+
+	//オセロを終了して駒を置けなくする
+	function endBoard(board){
+		//すべてのマスのブランククラスを削除する（駒を置けなくする）
+		console.log("終了");
+		for(var i = 0; i < 8; i++){
+			for(var k = 0; k < 8; k++){
+				resetHighlight(board, i, k);
+				board[i][k].removeClass(CLASS_BLANK);
+			}
+		}
 	}
 
 	/**
 	* 追記
 	* ハイライトの設定
 	*/
-		function setHighlight(board, turn, cols, rows){
-			//ハイライト部分をブランクに戻す
-			for(var i = 0; i < cols; i++){
+	function setHighlight(board, turn, cols, rows){
+		//ハイライト部分をブランクに戻す
+		for(var i = 0; i < cols; i++){
 			for(var k = 0; k < rows; k++){
-				if(board[i][k].hasClass(CLASS_HIGHLIGHT)){
-					var firstPut = board[i][k];
-					firstPut.removeClass(CLASS_HIGHLIGHT);
-					firstPut.addClass(CLASS_BLANK);
-				}
+				resetHighlight(board, i, k);
 			}
-			}
+		}
+
+		//自分のターンのみハイライトする
+		if(myColor != turn){
+			return;
+		}
+
 		/**
 		* 石を置ける場所を探して
 		* ハイライト表示を行う
@@ -272,15 +329,15 @@ $(function() {
 					array.push([i, k]);
 				}
 			}
-			}
-			//ハイライト表示の設定
-			for(var i = 0; i < array.length; i++){
-				var value = array[i];
-				var boardPut = board[value[0]][value[1]];
-				boardPut.removeClass(CLASS_BLANK);
-				boardPut.addClass(CLASS_HIGHLIGHT);
-			}
 		}
+		//ハイライト表示の設定
+		for(var i = 0; i < array.length; i++){
+			var value = array[i];
+			var boardPut = board[value[0]][value[1]];
+			boardPut.addClass(CLASS_HIGHLIGHT);
+		}
+	}
+
 
 	/**
 	 * 石を置いて周りの石をひっくり返す。
@@ -305,6 +362,10 @@ $(function() {
 		});
 	}
 
+
+
+
+
 	/**
 	 * 次のターンの色を決定する。
 	 * 全く置く場所がなかった場合はパスとなり相手のターンとなる。
@@ -317,14 +378,20 @@ $(function() {
 				if(board[i][k].hasClass(CLASS_BLANK)){
 					//置く場所があった場合、相手のターンになる
 					if(canPut(board , nextTurn , i , k)){
+						//var ImgSrc = $("img#turn_stone").attr("src");
+						var imgSrc ="./img/stone_" + nextTurn + ".png";
+						$("img#turn_stone").attr("src",imgSrc);
 						return nextTurn;
 					}
 				}
 			}
+		}if(nextTurn == CLASS_BLACK){
+			var imgSrc ="./img/stone_" + CLASS_WHITE + ".png";
+		}else{
+			var imgSrc ="./img/stone_" + CLASS_BLACK + ".png";
 		}
+		$("img#turn_stone").attr("src",imgSrc);
 
-		//path
-		showMessage(nextTurn + ' path.' , _messagebar);
 		return (nextTurn == CLASS_BLACK) ? CLASS_WHITE : CLASS_BLACK;
 	}
 
@@ -439,4 +506,83 @@ $(function() {
 				   .fadeIn(90);
 	}
 
-})(jQuery);
+	//ゲームを終了する
+	function sendResult(result){
+		var data = {
+				result : result,
+			};
+		$.ajax({
+			type:"POST",
+			url:"/endgame",
+			data:JSON.stringify(data),
+			contentType: 'application/json',
+			dataType: "json",
+		});
+
+		var message = "あなたの勝ちです。";
+		console.log(result);
+		if(result == "lose"){
+			message = "あなたの負けです。";
+		}
+
+		$('#result_dialog').text(message);
+		$('#result_dialog').dialog('open');
+
+		//投了ボタンの非表示
+		$('#resign_button').attr('disabled', true);
+		//スキップボタンの非表示
+		$('#skip_button').attr('disabled', true);
+		//退出ボタンの表示
+		$('#leaving_button').attr('disabled', false);
+	}
+
+    //投了ボタンが押されたのを検知する。
+    $( '#resign_button' ) . click( function() {
+        $( '#resign_dialog' ) . dialog( 'open' );
+    } );
+
+	//投了確認ダイアログ
+    $( '#resign_dialog' ) . dialog( {
+        title:"投了します",
+        closeOnEscape:false,//エスケープキーでとじないように
+        dialogClass:"no-close",//×ボタンを消す処理
+        resizable:false,//サイズを変えられないように
+        modal:true,//表示中はほかの処理をいじれないように
+    	autoOpen: false,//勝手に開かないように
+        buttons:{
+        	"はい":function(){
+        		$(this).dialog('close');
+
+        		//勝負結果を設定する
+        		//[フラグ、マスター結果、挑戦者結果]]
+        		var result = ['end','lose','win'];
+        		if(myColor != 'black'){
+        			result = ['end','win','lose'];
+        		}
+        		//結果を送信
+				ws.send(result);
+
+        	},
+        	"いいえ":function(){
+        		$(this).dialog('close');
+        	}
+        }
+    } );
+
+    //勝敗表示ダイアログの処理
+    $('#result_dialog').dialog({
+    	autoOpen:false,
+    	dialogClass:"no-close",//×ボタンを消す処理
+    	closeOnEscape:false,//エスケープキーでとじないように
+    	title:'結果',
+    	modal:true,
+    	dialogClass:"no-close",
+    	resizable:false,
+    	buttons:{
+    		"OK":function(){
+	       		$(this).dialog('close');
+	       	}
+		}
+    });
+
+});
