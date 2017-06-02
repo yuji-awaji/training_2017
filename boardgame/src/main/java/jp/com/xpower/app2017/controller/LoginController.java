@@ -43,7 +43,13 @@ public class LoginController {
     }
 
     @RequestMapping("/menu")//5月26日 仮ログインのために変更
-    public String menu(Model model) {
+    public String menu(Model model,HttpSession session) {
+    	String userId = (String) session.getAttribute("userId");
+    	if(userId == null){
+    		session.invalidate();//セッション破棄
+    		model.addAttribute("errorMessage",Error.SESSIONERROR);
+    		return "/error";
+    	}
         return "4_menu";
     }
 
