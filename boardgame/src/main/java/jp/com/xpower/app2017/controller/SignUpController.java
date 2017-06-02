@@ -1,75 +1,62 @@
-package controller;
-
-import java.io.IOException;
-import java.util.Base64;
+package jp.com.xpower.app2017.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jp.com.xpower.app2017.model.SignupError;
+import jp.com.xpower.app2017.model.UserInfo;
+import jp.com.xpower.app2017.model.UserTableRepository;
+
 @Controller
 public class SignUpController {
 
-	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();// パスワードハッシュ用
 	@Autowired
-	UserTableRepository UserTableRepository;
+	UserTableRepository userTableRepository;
 
-	@PostMapping("/upload")
-	String upload(@ModelAttribute model.UserInfo userData,Model model) throws IOException {
-
-
-		model.UserDataCheck userCheck = new model.UserDataCheck();// ユーザーの入力が正規であるかチェック
-		model.ErrorMsgFlag errorFlag = new model.ErrorMsgFlag();// 入力ミスがあった場合に表示するエラーメッセージのフラグインスタンス
-
-		// 入力チェックメソッド呼び出し
-		errorFlag = userCheck.inputCheck(userData);
-
-		// null=エラーであるため、エラー画面を表示
-		if (errorFlag.equals(null)) {
-			model.addAttribute("errorMessage", "画像の読み込みに失敗しました");
-			return "error";
-		}
-
-		// IDがDBに登録されているかの確認
-
-
-		// 入力チェックがすべて問題ない場合の処理
-		if(errorFlag.getErrorMsg().isEmpty()){
-
-
-
-			// プロフィール画像をHTML上で表示するための、バイナリデータのBase64形式でのエンコード
-			String encoded = Base64.getEncoder().encodeToString(ut.getProfileImage());
-
-			// 画像の形式、base64形式のバイナリデータ、ユーザー情報のmodelへの格納
-			model.addAttribute("image_type", ut.getFileType());
-			model.addAttribute("image", encoded);
-			model.addAttribute("UserResult", userData);
-			// 登録完了画面呼び出 し
-			return "2_1_registered";
-		} else {
-			// 登録失敗時の処理。フラグを送り、エラーメッセージを表示する
-			model.addAttribute("UserInfo", new model.UserInfo());
-			model.addAttribute("ErrorFlag", errorFlag);
-			return "2_signup";
-		}
-	}
-
-	// ユーザー登録画面表示処理
+	// ユーザー登録画面表示処理。
 	@RequestMapping("/signup")
 	public String signup(Model model) {
-		model.addAttribute("UserInfo", new model.UserInfo());
-		model.addAttribute("ErrorFlag", new model.ErrorMsgFlag(1));// model.ErrorMsgFlagクラスに1を送ると、フラグが初期化される
+		// ユーザーの入力を受けとるインスタンスをスコープに保存。
+		model.addAttribute("UserInfo", new UserInfo());
+		// 発生したエラーの内容を送る。（初回表示なのでエラーメッセージは空であり表示されない）
+		model.addAttribute("ErrorFlag", new SignupError());
 		return "2_signup";
 	}
 
-	// ログイン画面表示処理
-	@RequestMapping("/") // (5)
-	public String login(Model model) {// (3)
-		model.addAttribute("ErrorFlag", true);
-		return "1_login";
+	// ユーザー登録画面でユーザーが新規登録ボタンを押したときに呼ばれる処理
+	@PostMapping("/confirm")
+	String confirm(@ModelAttribute UserInfo userInfo, Model model) {
+
+		boolean formDataValidation;// 入力値正誤格納変数
+
+		// 入力値の整合性の確認。ファイルを開くので例外のtry catch
+		try {
+			formDataValidation=userInfo.userInfoValidate(userTableRepository);
+
+		} catch (Exception e) {// 例外発生時の処理。例外の内容をエラーページに送信
+
+			model.addAttribute("errorMessage", userInfo.getExceptionMessage());
+			return "error";
+		}
+		//入力値がDBに保存可能である場合の処理
+		if (formDataValidation) {
+
+			//データベースへ値を登録するメソッドの呼び出し
+			UserInfo.insertUserData(userInfo, userTableRepository, model);
+			return "2_1_registered";
+
+		} else {//入力値がDBに保存不可である場合の処理
+			// ユーザーの入力を受けとるインスタンスをスコープに保存
+			model.addAttribute("UserInfo", userInfo);
+			// 入力が不可であった理由のメッセージをクライアントの表示画面に送る
+			model.addAttribute("ErrorMessage", userInfo.getErrorMessage());
+			return "2_signup";
+
+		}
 	}
+
 }

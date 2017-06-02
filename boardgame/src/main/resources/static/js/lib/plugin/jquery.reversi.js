@@ -86,8 +86,10 @@ $(function() {
 			//ハイライト設定
 			setHighlight(board, turn, defaults.cols, defaults.rows);
 
+
 			//websocketの設定
 			ws = new WebSocket("ws://localhost:8080/echo?" + options.roomid);
+
 		    ws.onopen = function(){
 		    };
 		    ws.onclose = function(){
@@ -111,7 +113,7 @@ $(function() {
 		    		return;
 		    	}
 
-		    	//盤面の更新
+
 		    	upsets(board , put[3] , put[1] , put[2]);
 
 				//終了判定
@@ -151,10 +153,13 @@ $(function() {
 				//ハイライト設定
 				setHighlight(board, turn, defaults.cols, defaults.rows);
 
+
 		    };
 		    ws.onerror = function(event){
 		        alert("接続に失敗しました。");
-		    };
+		    };*/
+
+
 
 
 
@@ -180,6 +185,7 @@ $(function() {
 				//石を置いたら相手の画面にも反映される
 				var put = ['put',data.col,data.row,turn];
 				ws.send(put);
+
 
 
 				if(opts.cpu && turn != opts.my_color){
@@ -286,6 +292,7 @@ $(function() {
 		}
 		var onPut = board[col][row];
 		onPut.removeClass(CLASS_HIGHLIGHT);
+
 	}
 
 	//オセロを終了して駒を置けなくする
@@ -298,6 +305,7 @@ $(function() {
 				board[i][k].removeClass(CLASS_BLANK);
 			}
 		}
+
 	}
 
 	/**
@@ -306,6 +314,7 @@ $(function() {
 	*/
 	function setHighlight(board, turn, cols, rows){
 		//ハイライト部分をブランクに戻す
+
 		for(var i = 0; i < cols; i++){
 			for(var k = 0; k < rows; k++){
 				resetHighlight(board, i, k);
@@ -330,13 +339,16 @@ $(function() {
 				}
 			}
 		}
+
 		//ハイライト表示の設定
 		for(var i = 0; i < array.length; i++){
 			var value = array[i];
 			var boardPut = board[value[0]][value[1]];
+
 			boardPut.addClass(CLASS_HIGHLIGHT);
 		}
 	}
+
 
 
 	/**
@@ -364,8 +376,6 @@ $(function() {
 
 
 
-
-
 	/**
 	 * 次のターンの色を決定する。
 	 * 全く置く場所がなかった場合はパスとなり相手のターンとなる。
@@ -378,9 +388,15 @@ $(function() {
 				if(board[i][k].hasClass(CLASS_BLANK)){
 					//置く場所があった場合、相手のターンになる
 					if(canPut(board , nextTurn , i , k)){
+
 						//var ImgSrc = $("img#turn_stone").attr("src");
 						var imgSrc ="./img/stone_" + nextTurn + ".png";
 						$("img#turn_stone").attr("src",imgSrc);
+
+
+
+
+
 						return nextTurn;
 					}
 				}
@@ -391,6 +407,7 @@ $(function() {
 			var imgSrc ="./img/stone_" + CLASS_BLACK + ".png";
 		}
 		$("img#turn_stone").attr("src",imgSrc);
+
 
 		return (nextTurn == CLASS_BLACK) ? CLASS_WHITE : CLASS_BLACK;
 	}
@@ -552,6 +569,7 @@ $(function() {
         buttons:{
         	"はい":function(){
         		$(this).dialog('close');
+
 
         		//勝負結果を設定する
         		//[フラグ、マスター結果、挑戦者結果]]

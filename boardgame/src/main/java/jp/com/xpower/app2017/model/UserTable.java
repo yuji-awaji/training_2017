@@ -38,21 +38,8 @@ public class UserTable{
 	public UserTable(){
 
 	}
-	public UserTable(String userId,String password,String nickname,
-			byte[] profileImage,String extension){
-		this.userId=userId;
-		this.password=password;
-		this.nickname=nickname;
-		this.profileImage=profileImage;
-		this. fileType=extension;
-	}
 
-	public String getuserId() {
-		return userId;
-	}
-	public void setuserId(String userId) {
-		this.userId = userId;
-	}
+
 	public String getPassword() {
 		return password;
 	}

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.com.xpower.app2017.model.BoardGameConstant.Error;
 import jp.com.xpower.app2017.model.BoardGameConstant.State;
-import jp.com.xpower.app2017.model.OthelloInfo;
 import jp.com.xpower.app2017.model.RoomTable;
 import jp.com.xpower.app2017.model.RoomTableRepository;
 import jp.com.xpower.app2017.model.SelectUserTable;
@@ -64,9 +63,11 @@ public class OthelloController {
 			HttpServletResponse response, HttpSession session) {
 		// セッションからroomを取得
 		RoomTable getRoom = (RoomTable) session.getAttribute("room");
+
 		// DBから現在のroomを取得
 		RoomTable checkedRoom = OthelloInfo.getCheckRoom(getRoom.getRoomId(), roomTableRepository);
 		// セッションに詰めなおす
+
 		session.setAttribute("room", checkedRoom);
 
 		// マスターフラグをセッションから取得
