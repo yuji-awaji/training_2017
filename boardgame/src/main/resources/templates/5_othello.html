@@ -12,20 +12,15 @@
 
 <script type="text/javascript" src="./common/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="./common/js/jquery-ui.js"></script>
-<script type="text/javascript" src="./js/5_othello.js"></script>
-
 <!-- jqueryオセロjs -->
 <script type="text/javascript" src="./js/lib/plugin/jquery.reversi.js"></script>
 
-<script type="text/javascript">
-	$(function() {
-		$('#othello_board').reversi({cpu:false , width:480 , height : 480});
-	});
-</script>
+
+<script type="text/javascript" src="./js/5_othello.js"></script>
 
 
 </head>
-<body background="./common/img/background.jpg">
+<body background="./common/img/background.jpg"  th:attr="roomid=${session.room.roomId}">
 
 	<!-- 相手の情報表示エリア -->
 	<table id="enemy_area">
@@ -39,10 +34,10 @@
 		<td id="enemy_stone_color_area"><div id="enemy_stone_color">
 			石の色:
 			<span th:if="${session.isMasterFlag}">
-				<img src="./img/stone_white.png" id="myself_stone"/>
+				<img src="./img/stone_white.png" id="enemy_stone"/>
 			</span>
 			<span th:unless="${session.isMasterFlag}">
-				<img src="./img/stone_black.png" id="myself_stone"/>
+				<img src="./img/stone_black.png" id="enemy_stone"/>
 			</span>
 			</div>
 		</td>
@@ -86,7 +81,7 @@
 	<!-- ボタンエリア -->
 	<div id="button_area">
 		<input type = "button" name="resign" value="投了" id="resign_button" class="common_button" /><br />
-		<input type = "button" name="skip" value="スキップ" class="common_button" id="skip_button" />
+<!-- 		<input type = "button" name="skip" value="スキップ" class="common_button" id="skip_button" /> -->
 		<input type = "button" name="leaving" value="退出" class="common_button" id="leaving_button" />
 	</div>
 

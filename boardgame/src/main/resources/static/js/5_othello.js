@@ -1,15 +1,27 @@
 ﻿appear_flag = false;
 
 $(function() {
+	//-1の時はmy_collarが白、それ以外は黒
+	var color = $('#myself_stone').attr('src').indexOf("black");
+	if(color >= 0){
+		color = 'black';
+	}else{
+		color = 'white';
+	}
+
+	var roomid = $("body[roomid]").attr('roomid')
+
+	$('#othello_board').reversi({cpu:false, my_color :color , width:480 , height : 480, roomid : roomid});
+
 	$('#enemy_area').toggle(false);
-	//対戦待機ダイアログ
+	// 対戦待機ダイアログ
 	if (appear_flag == false) {
 		$('#wait_dialog').dialog({
 			title : "対戦待機",
-			closeOnEscape : false,//エスケープキーでとじないように
+			closeOnEscape : false,// エスケープキーでとじないように
 			modal : true,
 			resizable : false,
-			dialogClass : "no-close",//×ボタンを消す処理
+			dialogClass : "no-close",// ×ボタンを消す処理
 			buttons : [ {
 				text : "やめる",
 				id : "open_button",
@@ -19,35 +31,35 @@ $(function() {
 				}
 			} ]
 		});
-		//ポーリング処理で対戦相手が来たかどうか調べる
+		// ポーリング処理で対戦相手が来たかどうか調べる
 		$(function() {
 			polling();
 		});
 	}
-	//対戦者が現れた時のダイアログ
+	// 対戦者が現れた時のダイアログ
 	$('#battle_confirmation_diaglog').dialog({
 		title : "対戦開始",
-		closeOnEscape : false,//エスケープキーでとじないように
+		closeOnEscape : false,// エスケープキーでとじないように
 		modal : true,
 		autoOpen : false,
 		resizable : false,
-		dialogClass : "no-close",//×ボタンを消す処理
+		dialogClass : "no-close",// ×ボタンを消す処理
 		buttons : [ {
 			text : "はじめる",
 			id : "open_button",
 			click : function() {
 				$(this).dialog('close');
-				//toggleを使って反転
+				// toggleを使って反転
 				$('#enemy_area').toggle(true);
 			}
 		} ]
 	});
 
-	//キャンセル確認ダイアログ
+	// キャンセル確認ダイアログ
 	$('#cancel_confirmation_dialog').dialog({
 		autoOpen : false,
-		dialogClass : "no-close",//×ボタンを消す処理
-		closeOnEscape : false,//エスケープキーでとじないように
+		dialogClass : "no-close",// ×ボタンを消す処理
+		closeOnEscape : false,// エスケープキーでとじないように
 		title : "対戦をキャンセルします",
 		resizable : false,
 		modal : true,
@@ -55,7 +67,7 @@ $(function() {
 			"OK" : function() {
 				$(this).dialog('close');
 
-				//ルームの状態を変更する。
+				// ルームの状態を変更する。
 				var data = {
 					roomState : "2",
 				};
@@ -76,11 +88,11 @@ $(function() {
 		}
 	});
 
-	//退出ダイアログの処理
+	// 退出ダイアログの処理
 	$('#leaving_dialog').dialog({
 		autoOpen : false,
-		dialogClass : "no-close",//×ボタンを消す処理
-		closeOnEscape : false,//エスケープキーでとじないように
+		dialogClass : "no-close",// ×ボタンを消す処理
+		closeOnEscape : false,// エスケープキーでとじないように
 		title : "退出します",
 		resizable : false,
 		modal : false,
@@ -95,19 +107,19 @@ $(function() {
 		}
 	});
 
-	//スキップボタンが押された時の処理
+	// スキップボタンが押された時の処理
 	$('#leaving_button').attr("disabled", true);
-	//スキップボタンの非表示
-	//$('#skip_button').attr("disabled",true);
+	// スキップボタンの非表示
+	// $('#skip_button').attr("disabled",true);
 	$('#leaving_button').click(function() {
 		$('#leaving_dialog').dialog('open');
 	});
 });
 
-//1秒後に変える モック用処理
-//window.setTimeout("battle_start()", 3000);
+// 1秒後に変える モック用処理
+// window.setTimeout("battle_start()", 3000);
 
-//ポーリング
+// ポーリング
 function mySleep(time) {
 	return (function() {
 		var dfd = $.Deferred();
@@ -139,45 +151,47 @@ function polling() {
 
 		var d = $.Deferred();
 		if (roomState == 0) {
-			//doneの処理、ポーリング
+			// doneの処理、ポーリング
 			d.resolve();
 		} else if (roomState == 1) {
-			//failの処理、対戦相手がそろったので対戦確認ダイアログの表示
+			// failの処理、対戦相手がそろったので対戦確認ダイアログの表示
 			changeUserInfo(userNickname, encoded, fileType);
 			d.reject();
-			//5/25指摘：roomStateが2の時の処理を記述
-		} else if (roomState == 2) {
+		} else {
 			alert("エラー：メニューに戻ります");
 			window.location.href = "/redirectmenu";
 		}
 
 		// Promiseを返す
 		return d.promise();
-	}).then(mySleep(5)).done(polling).fail(function() {
+	})
+	.then(mySleep(5))
+	.done(polling)
+	.fail(function() {
 		battle_start();
 	});
 }
 
 function changeUserInfo(userNickname, encoded, fileType) {
-	$("#enemy_nickname").after(userNickname);
+	$("#enemy_nickname").append(userNickname);
 	var urlstr = 'data:' + fileType + ';base64,' + encoded;
 	var img = new Image();
 	img.src = 'data:' + fileType + ';base64,' + encoded;
 	img.id = 'enemy_img';
 	$('#enemy_img_frame').append(img);
 
-	//$("#myself_img").after(th:src="'data:image/'+${filetype}+';base64,'+${encoded}");
+	// $("#myself_img").after(th:src="'data:image/'+${filetype}+';base64,'+${encoded}");
 }
 
-function Base64ToImage(base64img, callback) {
+/*function Base64ToImage(base64img, callback) {
 	var img = new Image();
 	img.onload = function() {
 		callback(img);
 	};
 	img.src = base64img;
-}
+}*/
 
-//対戦者が現れた時のダイアログ
+// 対戦者が現れた時のダイアログ
 function battle_start() {
 	$('#wait_dialog').dialog('close');
 	$('#battle_confirmation_diaglog').dialog('open');
