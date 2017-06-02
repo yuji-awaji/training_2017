@@ -1,0 +1,320 @@
+﻿@CHARSET "UTF-8";
+/*ボディー*/
+body{
+	font-weight:bold;
+	position:absolute;
+	height:670px;
+	width:1000px;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	margin:auto;
+	font-size:18px;
+}
+
+/*相手のエリア*/
+#enemy_area{
+	border: 4px double #ddd;
+	top:0px;
+	left:50px;
+	position:absolute;
+	background-color:#f2cf01;
+	width:310px;
+	height:60px;
+	text-align:center;
+	vartical-align:middle;
+}
+
+/*相手の画像を表示する場所*/
+#enemy_img_frame{
+	width:45px;
+	height:45px;
+	vartical-align:middle;
+	text-align:center;
+}
+
+/*相手の石画像を表示エリア*/
+#enemy_stone_color{
+	position: relative;
+    top: -5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+/*相手の画像*/
+img#enemy_img{
+	width:auto;
+	height:auto;
+	max-height:45px;
+	max-width:45px;
+    position: relative;
+    top: 2px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+}
+
+/*対戦相手のニックネーム*/
+#enemy_nickname{
+	position: relative;
+    top: 5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+#enemy_display{
+	width:3em;
+}
+
+
+#enemy_stone{
+	position:absolute;
+	margin-top:3px;
+	height:20px;
+	width:20px;
+}
+
+/*手番表示エリア*/
+#turn{
+	width:137px;
+	border: 4px double #ddd;
+	position:absolute;
+	top:20px;
+	left:427px;
+	background-color:#f2cf01;
+}
+
+#turn_stone{
+	position:absolute;
+	margin-top:3px;
+	height:20px;
+	width:20px;
+}
+
+/*チャットエリア*/
+#chat_area{
+	clear;
+	position:absolute;
+	width:375px;
+	height:650px;
+	border: 4px double #ddd;
+	left:590px;
+	background-color:#c3c3c3;
+}
+
+/*チャットメッセージを表示するエリア*/
+#chat_message_area{
+	width:375px;
+	height:620px;
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
+
+/*送信される文字枠t*/
+#send_text{
+	width:310px;
+}
+
+/*送信ボタン*/
+#send_button{
+	line-height: 25px;
+	width:50px;
+	height:30px;
+	padding:0px;
+	margin:0px;
+}
+
+/*オセロエリア*/
+#othello_area{
+	border:15px solid #000;
+	position:absolute;
+	top:70px;
+	left:50px;
+}
+
+/*とりあえずでおいてる石置きボタン*/
+#othello_place1{
+	height:60px;
+	width:60px;
+	position:absolute;
+	top:245px;
+	left:123px;
+}
+
+#othello_place2{
+	height:60px;
+	width:60px;
+	position:absolute;
+	top:123px;
+	left:245px;
+}
+#othello_place3{
+	height:60px;
+	width:60px;
+	position:absolute;
+	top:306px;
+	left:184px;
+}
+
+#othello_place4{
+	height:60px;
+	width:60px;
+	position:absolute;
+	top:184px;
+	left:306px;
+}
+
+/*とりあえずで置いてるオセロ盤画像*/
+#othello_img{
+	width:490px;
+	height:490px;
+	background-size:cover;
+	background-image:url(../img/othello_board.jpg);
+}
+
+/*ボタン表示エリア*/
+#button_area{
+	position:absolute;
+	left:50px;
+	top:605px;
+}
+
+/*自分の情報表示エリア*/
+#myself_area{
+	border: 4px double #ddd;
+	position:absolute;
+	top:590px;
+	left:263px;
+	width:310px;
+	height:50px;
+	text-align:center;
+	background-color:#f2cf01
+}
+
+/*自分のニックネーム表示エリア*/
+#myself_nickname{
+	position: relative;
+    top: 5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+/*自分の画像のテーブル*/
+#myself_img_frame{
+	width:45px;
+	height:45px;
+	padding-top:10px;
+	vartical-align:middle;
+	text-align:center;
+}
+
+#myself_stone_color{
+	position: relative;
+    top: -5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+/*自分の石の色*/
+#myself_stone{
+	position:absolute;
+	margin-top:3px;
+	height:20px;
+	width:20px;
+}
+
+/*自分の表示画像*/
+img#myself_img{
+	width:auto;
+	height:auto;
+	max-height:45px;
+	max-width:45px;
+    position: relative;
+    top: 2px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+}
+
+
+/*投了ボタン*/
+#resign_button{
+	width:100px;
+	font-size:15px;
+	padding:0px;
+	margin:0px;
+}
+
+/*スキップボタン*/
+#skip_button{
+	width:100px;
+	font-size:15px;
+	padding:0px;
+	margin:0px;
+}
+
+/*退出ボタン*/
+#leaving_button{
+	width:100px;
+	font-size:15px;
+	padding:0px;
+	margin:0px;
+}
+
+.chat_img{
+	max-width:30px;
+	max-height:30px;
+	width:auto;
+	height:auto;
+	vartical-align:middle;
+}
+
+.chat_img_frame{
+	width:30px;
+	height:30px;
+	text-align:center;
+	vartical-align:middle;
+	float:left;
+}
+
+.chat_nickname{
+
+}
+
+.chat_text{
+	clear:both;
+}
+
+.system_message{
+	color:#ff0000;
+}
+
+.myself{
+	color:#00AA15;
+}
+
+.enemy{
+	color:#0168b3;
+}
+
+.odd{
+	background:#ffffff;
+}
+
+.even{
+	background:#ECECEC;
+}
+

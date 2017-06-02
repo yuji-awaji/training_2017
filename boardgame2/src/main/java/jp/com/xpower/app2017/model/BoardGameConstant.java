@@ -18,7 +18,7 @@ public final class BoardGameConstant {
 	// ユーザー登録機能用定数
 	public static class SignUpConstant {
 		public static final String ALEADYIDERROR = "IDは既に登録済みです<br></br>別のIDを入力してください";
-		public static final String DEFAULTIMAGEURL = "static/img/user_default.jpg";
+		public static final String DEFAULTIMAGEURL = "./src/main/resources/static/img/user_default.jpg";
 		public static final String FILEMATCH = "image/jpg|image/png|image/jpeg|image/gif|image/bmp";
 		public static final String NICKNAMEMATCH = "[^　\\s]+";
 		public static final String IDERROR = "IDは3文字以上10文字以下の半角英数字で<br></br>入力してください<br></br>";
