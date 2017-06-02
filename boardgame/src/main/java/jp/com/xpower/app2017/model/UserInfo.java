@@ -3,8 +3,8 @@ package jp.com.xpower.app2017.model;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -139,12 +139,13 @@ public class UserInfo implements Serializable {
 
 			// ファイルのMIMEを格納
 			fileType = BoardGameConstant.SignUpConstant.DEFAULTIMAGETYPEMIME;
-
+			URL url = this.getClass().getClassLoader().getResource(BoardGameConstant.SignUpConstant.DEFAULTIMAGEURL);
 			// ユーザープロフィール画像のバイナリデータへの変換
 			BufferedImage readImage;
 			try {
-				File file = new File(BoardGameConstant.SignUpConstant.DEFAULTIMAGEURL);
-				readImage = ImageIO.read(file);
+				//File file = new File(BoardGameConstant.SignUpConstant.DEFAULTIMAGEURL);
+				//File file = new File(url.getFile());
+				readImage = ImageIO.read(url);
 				ByteArrayOutputStream outPutStream = new ByteArrayOutputStream();
 				ImageIO.write(readImage, BoardGameConstant.SignUpConstant.DEFAULTIMAGETYPE, outPutStream);
 				imageByte = outPutStream.toByteArray();
