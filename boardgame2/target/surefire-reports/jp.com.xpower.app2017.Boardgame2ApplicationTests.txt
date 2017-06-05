@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: jp.com.xpower.app2017.Boardgame2ApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 46.296 sec - in jp.com.xpower.app2017.Boardgame2ApplicationTests
