@@ -34,9 +34,7 @@ public class RoomTable{
 	@Column(nullable = true)
 	private Date battleStartTime;
 
-	public RoomTable(){
 
-	}
 
 	public int getRoomId() {
 		return roomId;
