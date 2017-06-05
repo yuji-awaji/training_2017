@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8"></meta>
+		<title>ユーザー情報｜オセロゲーム</title>
+		<link rel="stylesheet" type="text/css" href="common/css/header.css"></link>
+		<link rel="stylesheet" type="text/css" href="css/page_3_user_profile.css"></link>
+		<link rel="stylesheet" href="./common/css/jquery-ui.css" type="text/css"></link>
+		<link rel="stylesheet" href="./common/css/common.css" type="text/css"></link>
+
+		<script type="text/javascript" src="./common/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="./common/js/jquery-ui.js"></script>
+		<script type="text/javascript" src="common/js/dropdown.js"></script>
+		<script type="text/javascript" src="js/3_user_profile.js"></script>
+
+	</head>
+	<body class="main" background="./common/img/background.jpg">
+
+
+		<div id="header">
+			<div id="logo">
+				<img src="img/logo.jpg"></img>
+			</div>
+			<div id="info">
+				<h1>ユーザー情報<br></br></h1>
+				<p>―プロフィールと戦績―</p>
+			</div>
+			<div id="icon_area">
+				<img th:src="${profileImagePath}"  id="user_icon"></img>
+			</div>
+			<div id="dropdown">
+				<table id="menu_table">
+					<tr>
+						<td id="name" th:text="${nickname}"></td>
+				    </tr>
+	    			<tr class="drop_top">
+						<td id="drop_top">▼メニュー▼</td>
+    				</tr>
+    					<tr class="drop_menu"><td><a href="menu">メインメニューへ</a></td></tr>
+    					<tr class="drop_menu dialog_call_logout"><td><a href="#">ログアウト</a></td></tr>
+    				</table>
+				</div>
+		 	</div>
+
+		 <div id="main">
+		 <p id="info_1">◇ユーザープロフィール</p>
+
+		<table class="user_profile">
+		<tr>
+			<td id="user_id_info" class="title">ID</td><td class="user_data">testtaro</td>
+		</tr>
+		<tr>
+			<td id="user_name_info"  class="title">ニックネーム</td><td class="user_data" th:text="${nickname}"></td>
+		</tr>
+		<tr>
+			<td	 colspan="2" id="user_icon_info"  class="title">プロフィール画像</td></tr>
+			<tr><td  colspan="2" class="user_data" id="user_icon_area"><img th:src="${profileImagePath}" id="user_icon_data"></img></td></tr>
+
+		</table>
+		<p id="info_2">◇通算戦績</p>
+		<p id="capture_1">※過去全ての対戦の戦績です</p>
+		<table class="user_battle_result">
+		<tr>
+			<td id="user_battle_result_data">○勝○敗○引き分け</td><td id="user_winning_percentage">勝率○○%</td>
+		</tr>
+		</table>
+
+		<p id="info_3">◇過去の勝敗</p>
+		<p id="capture_2">※直近の10戦の対戦相手と勝敗です</p>
+
+
+		<table  id="log_table" class="user_battle_log">
+		<thead>
+		<tr id="log_title">
+			<th class="title log_title enemy_name">対戦相手</th><th class="title log_title result">勝敗</th><th class="title log_title days">対戦開始日時</th>
+		</tr>
+		</thead>
+		<tbody id="log">
+		<tr class="odd">
+			<td class="enemy_name">テスト次郎</td><td class="result">勝</td><td class="days">12月31日<br></br>14時2分</td>
+		</tr><tr class="even">
+			<td class="enemy_name">テスト三郎</td><td class="result">勝</td><td class="days">4月7日<br></br>13時0分</td>
+		</tr><tr class="odd">
+			<td class="enemy_name">テスト四郎</td><td class="result">負</td><td class="days">4月6日<br></br>10時0分</td>
+		</tr><tr class="even">
+			<td class="enemy_name">テスト五郎</td><td class="result">勝</td><td class="days">4月6日<br></br>1時0分</td>
+		</tr><tr class="odd">
+			<td class="enemy_name">テスト六郎</td><td class="result">引</td><td class="days">4月6日<br></br>0時0分</td>
+		</tr><tr class="even">
+			<td class="enemy_name">テスト七郎</td><td class="result">勝</td><td class="days">4月5日<br></br>0時0分</td>
+		</tr><tr class="odd">
+			<td class="enemy_name">テスト八郎</td><td class="result">勝</td><td class="days">4月3日<br></br>23時59分</td>
+		</tr><tr class="even">
+			<td class="enemy_name">テスト九郎</td><td class="result">引</td><td class="days">4月2日<br></br>21時0分</td>
+		</tr><tr class="odd">
+			<td class="enemy_name">テスト十郎</td><td class="result">引</td><td class="days">4月2日<br></br>4時0分</td>
+		</tr><tr class="even">
+			<td class="enemy_name">テスト十一郎</td><td class="result">勝</td><td class="days">4月1日<br></br>0時0分</td>
+		</tr>
+		</tbody>
+		</table>
+
+
+
+		<div id="check_dialog_logout">
+			よろしいですか？
+		</div>
+		</div>
+
+	</body>
+</html>
